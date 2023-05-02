@@ -1,7 +1,7 @@
 {
   "name": "bundle-n-require",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Require and bundle Typescript and Javascript files in NodeJS",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
@@ -14,6 +14,12 @@
     "bundle",
     "nodejs"
   ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Segun Adebayo <joseshegs@gmail.com>",
   "license": "MIT",
   "dependencies": {
