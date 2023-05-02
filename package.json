@@ -1,0 +1,27 @@
+{
+  "name": "bundle-n-require",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "build": "tsup src --format cjs,esm --shims --dts"
+  },
+  "keywords": [
+    "esbuild",
+    "tsup",
+    "require",
+    "bundle",
+    "nodejs"
+  ],
+  "author": "Segun Adebayo <joseshegs@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "esbuild": "^0.17.18",
+    "node-eval": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.3",
+    "tsup": "^6.7.0"
+  }
+}
