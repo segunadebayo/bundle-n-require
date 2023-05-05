@@ -7,7 +7,7 @@ import fs from 'fs'
  * -----------------------------------------------------------------------------*/
 
 function requireDirect(file: string): BundleResult {
-  const fileName = fs.realpathSync(file)
+  const fileName = fs.realpathSync.native(file)
   delete require.cache[file]
   const mod = require(fileName)
   return {
@@ -49,7 +49,7 @@ async function bundleConfigFile(file: string, cwd: string) {
 
 function loadBundledFile(file: string, code: string): Promise<any> {
   const extension = path.extname(file)
-  const realFileName = fs.realpathSync(file)
+  const realFileName = fs.realpathSync.native(file)
 
   const loader = require.extensions[extension]!
 
