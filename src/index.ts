@@ -99,7 +99,7 @@ export async function bundleNRequire(
     try {
       bundle.mod = await loadBundledFile(absPath, bundle.code)
     } catch {
-      bundle.mod = require('node-eval')(bundle.code).default
+      bundle.mod = require('node-eval')(bundle.code, absPath).default
     }
     return bundle
   }
