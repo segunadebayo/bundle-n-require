@@ -1,6 +1,17 @@
 import { build } from 'esbuild'
 import path from 'path'
 import fs from 'fs'
+import { resolveImport} from 'resolve-import'
+
+const conditions = [
+  "development",
+  "production",
+  "import",
+  "module",
+  "require",
+  "node",
+  "default",
+]
 
 /* -----------------------------------------------------------------------------
  * Given a file path, require it directly
@@ -33,6 +44,7 @@ async function bundleConfigFile(file: string, cwd: string) {
     sourcemap: false,
     metafile: true,
     mainFields: ['module', 'main'],
+    conditions
   })
 
   const { text } = result.outputFiles[0]
@@ -89,7 +101,13 @@ export async function bundleNRequire(
   opts: BundleNRequireOptions = {}
 ) {
   const { cwd = process.cwd() } = opts
-  const absPath = require.resolve(file, { paths: [cwd] })
+  let absPath;
+  try {
+    const fileUrl = await resolveImport(file, cwd, { conditions });
+    absPath = typeof fileUrl === "string" ? fileUrl : fileUrl.pathname;
+  } catch {
+    absPath = require.resolve(file, { paths: [cwd] })
+  }
 
   try {
     return requireDirect(absPath)

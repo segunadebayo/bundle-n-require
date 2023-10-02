@@ -24,7 +24,8 @@
   "license": "MIT",
   "dependencies": {
     "esbuild": "^0.17.18",
-    "node-eval": "^2.0.0"
+    "node-eval": "^2.0.0",
+    "resolve-import": "^1.4.2"
   },
   "devDependencies": {
     "@types/node": "^18.16.3",
