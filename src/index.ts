@@ -1,4 +1,4 @@
-import { build } from 'esbuild'
+import { type BuildOptions, build } from 'esbuild'
 import path from 'path'
 import fs from 'fs'
 
@@ -21,18 +21,19 @@ function requireDirect(file: string): BundleResult {
  * Bundle a file and return the result
  * -----------------------------------------------------------------------------*/
 
-async function bundleConfigFile(file: string, cwd: string) {
+async function bundleConfigFile(file: string, cwd: string, options?: BuildOptions) {
   const result = await build({
+    platform: 'node',
+    format: 'cjs',
+    mainFields: ['module', 'main'],
+    ...options,
     absWorkingDir: cwd,
     entryPoints: [file],
     outfile: 'out.js',
     write: false,
-    platform: 'node',
     bundle: true,
-    format: 'cjs',
     sourcemap: false,
     metafile: true,
-    mainFields: ['module', 'main'],
   })
 
   const { text } = result.outputFiles[0]
@@ -82,6 +83,7 @@ type BundleResult = {
 export type BundleNRequireOptions = {
   cwd?: string
   interopDefault?: boolean
+  esbuildOptions?: BuildOptions
 }
 
 export async function bundleNRequire(
@@ -95,7 +97,7 @@ export async function bundleNRequire(
     return requireDirect(absPath)
     //
   } catch {
-    const bundle = <BundleResult>await bundleConfigFile(absPath, cwd)
+    const bundle = <BundleResult>await bundleConfigFile(absPath, cwd, opts.esbuildOptions)
     try {
       bundle.mod = await loadBundledFile(absPath, bundle.code)
     } catch {
