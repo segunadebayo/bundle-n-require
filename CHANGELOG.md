@@ -8,6 +8,4 @@
 
 ### Added
 
-- ``
-
-### Changed
+- Add support for `esbuildOptions` to be passed to `esbuild` when building the bundle.
