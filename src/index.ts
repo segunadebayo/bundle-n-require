@@ -3,21 +3,6 @@ import path from 'path'
 import fs from 'fs'
 
 /* -----------------------------------------------------------------------------
- * Given a file path, require it directly
- * -----------------------------------------------------------------------------*/
-
-function requireDirect(file: string): BundleResult {
-  const fileName = fs.realpathSync.native(file)
-  delete require.cache[file]
-  const mod = require(fileName)
-  return {
-    mod: mod.default ?? mod,
-    dependencies: [fileName],
-    code: fs.readFileSync(fileName, 'utf-8'),
-  }
-}
-
-/* -----------------------------------------------------------------------------
  * Bundle a file and return the result
  * -----------------------------------------------------------------------------*/
 
@@ -33,6 +18,7 @@ async function bundleConfigFile(file: string, cwd: string) {
     sourcemap: false,
     metafile: true,
     mainFields: ['module', 'main'],
+    conditions: ['node', 'module', 'development', 'production'],
   })
 
   const { text } = result.outputFiles[0]
@@ -91,16 +77,11 @@ export async function bundleNRequire(
   const { cwd = process.cwd() } = opts
   const absPath = require.resolve(file, { paths: [cwd] })
 
+  const bundle = <BundleResult>await bundleConfigFile(absPath, cwd)
   try {
-    return requireDirect(absPath)
-    //
+    bundle.mod = await loadBundledFile(absPath, bundle.code)
   } catch {
-    const bundle = <BundleResult>await bundleConfigFile(absPath, cwd)
-    try {
-      bundle.mod = await loadBundledFile(absPath, bundle.code)
-    } catch {
-      bundle.mod = require('node-eval')(bundle.code).default
-    }
-    return bundle
+    bundle.mod = require('node-eval')(bundle.code).default
   }
+  return bundle
 }
