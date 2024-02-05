@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "build": "tsup src --format cjs,esm --shims --dts"
+    "build": "tsup src --format cjs,esm --shims --dts",
+    "pub": "pnpm build && pnpm publish --no-git-checks --access public",
+    "clean": "rimraf dist"
   },
   "keywords": [
     "esbuild",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
+    "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   }
