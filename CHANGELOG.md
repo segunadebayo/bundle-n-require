@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.1.0](./#1.1.0) -
+## [1.1.1](./#1.1.1)
+
+### Fixed
+
+- Fix regression where the added custom conditions throws
+
+## [1.1.0](./#1.1.0)
 
 ### Fixed
 

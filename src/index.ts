@@ -15,7 +15,6 @@ async function bundleConfigFile(
     platform: 'node',
     format: 'cjs',
     mainFields: ['module', 'main'],
-    conditions: ['node', 'module', 'source', 'development', 'production'],
     ...options,
     absWorkingDir: cwd,
     entryPoints: [file],
