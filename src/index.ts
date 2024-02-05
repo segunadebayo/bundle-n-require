@@ -1,4 +1,4 @@
-import { build } from 'esbuild'
+import { type BuildOptions, build } from 'esbuild'
 import path from 'path'
 import fs from 'fs'
 
@@ -6,19 +6,24 @@ import fs from 'fs'
  * Bundle a file and return the result
  * -----------------------------------------------------------------------------*/
 
-async function bundleConfigFile(file: string, cwd: string) {
+async function bundleConfigFile(
+  file: string,
+  cwd: string,
+  options?: BuildOptions
+) {
   const result = await build({
+    platform: 'node',
+    format: 'cjs',
+    mainFields: ['module', 'main'],
+    conditions: ['node', 'module', 'source', 'development', 'production'],
+    ...options,
     absWorkingDir: cwd,
     entryPoints: [file],
     outfile: 'out.js',
     write: false,
-    platform: 'node',
     bundle: true,
-    format: 'cjs',
     sourcemap: false,
     metafile: true,
-    mainFields: ['module', 'main'],
-    conditions: ['node', 'module', 'development', 'production'],
   })
 
   const { text } = result.outputFiles[0]
@@ -55,19 +60,20 @@ function loadBundledFile(file: string, code: string): Promise<any> {
   return result
 }
 
-type BundleResult = {
-  mod: any
-  dependencies: string[]
-  code: string
-}
-
 /* -----------------------------------------------------------------------------
  * Finally, the bundle require code
  * -----------------------------------------------------------------------------*/
 
-export type BundleNRequireOptions = {
+export interface BundleNRequireOptions {
   cwd?: string
   interopDefault?: boolean
+  esbuildOptions?: BuildOptions
+}
+
+export interface BundleResult {
+  mod: any
+  dependencies: string[]
+  code: string
 }
 
 export async function bundleNRequire(
@@ -78,10 +84,12 @@ export async function bundleNRequire(
   const absPath = require.resolve(file, { paths: [cwd] })
 
   const bundle = <BundleResult>await bundleConfigFile(absPath, cwd)
+
   try {
     bundle.mod = await loadBundledFile(absPath, bundle.code)
   } catch {
     bundle.mod = require('node-eval')(bundle.code).default
   }
+
   return bundle
 }
