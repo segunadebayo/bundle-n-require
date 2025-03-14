@@ -1,6 +1,6 @@
 {
   "name": "bundle-n-require",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Require and bundle Typescript and Javascript files in NodeJS",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -33,5 +33,6 @@
     "rimraf": "^6.0.1",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2"
-  }
+  },
+  "packageManager": "pnpm@9.15.6+sha512.139cab068fdf0b751268179ac5f909b5be72afb4a75c513d1905d151befc8977b593d3cf8671ed83d4d6637c5c94b98ffbce108125de4a5a27a31233601a99de"
 }
